@@ -8,12 +8,14 @@ namespace LibraryData.Models
     public class Book : LibraryAsset
     {
         [Required]
-        public int ISBN { get; set; }
+        [Display(Name = "ISBN #")]
+        public string ISBN { get; set; }
 
         [Required]
         public string Author { get; set; }
 
         [Required]
+        [Display(Name = "DDC")]
         public string DeweyIndex { get; set; }
     }
 }

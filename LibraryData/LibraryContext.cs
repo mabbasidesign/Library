@@ -1,4 +1,5 @@
-﻿using LibraryData.Models;
+﻿using System;
+using LibraryData.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryData
@@ -11,6 +12,12 @@ namespace LibraryData
         public DbSet<Video> Videos { get; set; }
         public DbSet<Checkout> Checkouts { get; set; }
         public DbSet<CheckoutHistory> CheckoutHistories { get; set; }
+
+        public void Add()
+        {
+            throw new NotImplementedException();
+        }
+
         public DbSet<LibraryBranch> LibraryBranches { get; set; }
         public DbSet<BranchHours> BranchHours { get; set; }
         public DbSet<LibraryCard> LibraryCards { get; set; }
