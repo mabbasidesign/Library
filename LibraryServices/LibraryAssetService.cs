@@ -1,16 +1,15 @@
 ﻿using LibraryData;
-using System;
-using System.Linq;
 using LibraryData.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LibraryServices
 {
     public class LibraryAssetService : ILibraryAsset
     {
-        private LibraryContext _context;
-
+        private readonly LibraryContext _context;
         public LibraryAssetService(LibraryContext context)
         {
             _context = context;
@@ -22,46 +21,43 @@ namespace LibraryServices
             _context.SaveChanges();
         }
 
+        public string AuthorOrDirector(int id)
+        {
+            var isBook = _context.LibraryAssets.OfType<Book>()
+               .Where(a => a.Id == id).Any();
+            var isVideo = _context.LibraryAssets.OfType<Video>()
+                .Where(a => a.Id == id).Any();
+            return isBook ?
+                _context.Books.SingleOrDefault(b => b.Id == id).Author :
+            _context.Videos.SingleOrDefault(v => v.Id == id).Director
+            ?? "Unknown";
+        }
+
         public IEnumerable<LibraryAsset> GetAll()
         {
             return _context.LibraryAssets
-                .Include(asset => asset.Location)
-                .Include(asset => asset.Status);
-        }
-
-        public string GetAthorOrDirector(int id)
-        {
-            var isBook = _context.LibraryAssets.OfType<Book>()
-                  .Where(a => a.Id == id).Any();
-
-            var isVideo = _context.LibraryAssets.OfType<Video>()
-                .Where(a => a.Id == id).Any();
-
-            return isBook ?
-            _context.Books.FirstOrDefault(a => a.Id == id).Author :
-            _context.Videos.FirstOrDefault(a => a.Id == id).Director
-                ?? "Unknown";
+                .Include(asset => asset.Status)
+                .Include(asset => asset.Location);
         }
 
         public LibraryAsset GetById(int id)
         {
-            return _context.LibraryAssets
-               .Include(asset => asset.Location)
-               .Include(asset => asset.Status)
-               .FirstOrDefault(asset => asset.Id == id);
+            return 
+                GetAll()
+                .FirstOrDefault(asset => asset.Id == id);
         }
 
-        public LibraryBranch GetCurrentLocation(int id)
+        public LibraryBranch GetCurrentLocations(int id)
         {
             return GetById(id).Location;
         }
 
         public string GetDeweyIndex(int id)
         {
-            if (_context.Books.Any(b => b.Id == id))
+            if (_context.Books.Any(a => a.Id == id))
             {
                 return _context.Books
-                    .FirstOrDefault(b => b.Id == id).DeweyIndex;
+                    .SingleOrDefault(a => a.Id == id).DeweyIndex;
             }
             else return "";
         }
@@ -71,7 +67,7 @@ namespace LibraryServices
             if (_context.Books.Any(a => a.Id == id))
             {
                 return _context.Books
-                    .FirstOrDefault(a => a.Id == id).ISBN;
+                    .SingleOrDefault(a => a.Id == id).ISBN;
             }
             else return "";
         }
@@ -86,8 +82,7 @@ namespace LibraryServices
         public string GetType(int id)
         {
             var Book = _context.LibraryAssets.OfType<Book>()
-                .Where(a => a.Id == id);
-
+                 .Where(b => b.Id == id);
             return Book.Any() ? "Book" : "Video";
         }
     }

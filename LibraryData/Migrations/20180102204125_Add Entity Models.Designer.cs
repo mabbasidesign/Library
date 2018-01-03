@@ -8,13 +8,13 @@ using LibraryData;
 namespace LibraryData.Migrations
 {
     [DbContext(typeof(LibraryContext))]
-    [Migration("20170906203011_Add Models Table")]
-    partial class AddModelsTable
+    [Migration("20180102204125_Add Entity Models")]
+    partial class AddEntityModels
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "1.1.2")
+                .HasAnnotation("ProductVersion", "1.1.5")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("LibraryData.Models.BranchHours", b =>
@@ -117,9 +117,10 @@ namespace LibraryData.Migrations
 
                     b.Property<int>("NumberOfCopies");
 
-                    b.Property<int?>("StatusId");
+                    b.Property<int>("StatusId");
 
-                    b.Property<string>("Title");
+                    b.Property<string>("Title")
+                        .IsRequired();
 
                     b.Property<int>("Year");
 
@@ -179,23 +180,30 @@ namespace LibraryData.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Address");
+                    b.Property<string>("Address")
+                        .IsRequired();
 
-                    b.Property<DateTime>("DateTime");
+                    b.Property<DateTime>("DateOfBirth");
 
-                    b.Property<string>("FirstName");
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(30);
 
-                    b.Property<string>("LastName");
+                    b.Property<string>("Gender");
 
-                    b.Property<int?>("LibraryBranchId");
+                    b.Property<int?>("HomeLibraryBranchId");
 
-                    b.Property<int?>("LibraryCardId");
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(30);
 
-                    b.Property<string>("TelphoneNumber");
+                    b.Property<int>("LibraryCardId");
+
+                    b.Property<string>("Telephone");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LibraryBranchId");
+                    b.HasIndex("HomeLibraryBranchId");
 
                     b.HasIndex("LibraryCardId");
 
@@ -228,7 +236,8 @@ namespace LibraryData.Migrations
                     b.Property<string>("DeweyIndex")
                         .IsRequired();
 
-                    b.Property<int>("ISBN");
+                    b.Property<string>("ISBN")
+                        .IsRequired();
 
                     b.ToTable("Book");
 
@@ -298,18 +307,20 @@ namespace LibraryData.Migrations
 
                     b.HasOne("LibraryData.Models.Status", "Status")
                         .WithMany()
-                        .HasForeignKey("StatusId");
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("LibraryData.Models.Patron", b =>
                 {
-                    b.HasOne("LibraryData.Models.LibraryBranch", "LibraryBranch")
+                    b.HasOne("LibraryData.Models.LibraryBranch", "HomeLibraryBranch")
                         .WithMany("Patrons")
-                        .HasForeignKey("LibraryBranchId");
+                        .HasForeignKey("HomeLibraryBranchId");
 
                     b.HasOne("LibraryData.Models.LibraryCard", "LibraryCard")
                         .WithMany()
-                        .HasForeignKey("LibraryCardId");
+                        .HasForeignKey("LibraryCardId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
         }
     }

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace LibraryData.Migrations
 {
-    public partial class first : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -16,10 +16,11 @@ namespace LibraryData.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Address = table.Column<string>(nullable: true),
-                    DateTime = table.Column<DateTime>(nullable: false),
+                    DateOfBirth = table.Column<DateTime>(nullable: false),
                     FirstName = table.Column<string>(nullable: true),
+                    Gender = table.Column<string>(nullable: true),
                     LastName = table.Column<string>(nullable: true),
-                    TelphoneNumber = table.Column<string>(nullable: true)
+                    Telephone = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
