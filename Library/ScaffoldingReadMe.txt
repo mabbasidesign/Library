@@ -1,45 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using LibraryData;
-using LibraryServices;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+﻿ASP.NET Core MVC dependencies have been added to the project.
+(These dependencies include packages required to enable scaffolding)
 
-namespace Library
-{
-    public class Startup
-    {
+However you may still need to do make changes to your project.
+
+1. Suggested changes to Startup class:
+    1.1 Add a constructor:
+        public IConfigurationRoot Configuration { get; }
+
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
         }
 
-        public IConfigurationRoot Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
+    1.2 Add MVC services:
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddDbContext<LibraryContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
             services.AddMvc();
-            services.AddSingleton(Configuration);
-            services.AddScoped<ILibraryAsset, LibraryAssetService>();
-        }
+       }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+    1.3 Configure web app to use MVC routing:
+
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
@@ -48,7 +34,6 @@ namespace Library
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseBrowserLink();
             }
             else
             {
@@ -64,5 +49,3 @@ namespace Library
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
-    }
-}

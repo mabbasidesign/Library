@@ -37,7 +37,8 @@ namespace LibraryServices
         {
             return _context.LibraryAssets
                 .Include(asset => asset.Status)
-                .Include(asset => asset.Location);
+                .Include(asset => asset.Location)
+                .ToList();
         }
 
         public LibraryAsset GetById(int id)
