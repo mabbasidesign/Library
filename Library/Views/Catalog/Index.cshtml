@@ -1,6 +1,5 @@
 @model Library.Models.Catalog.AssetIndexModel
 
-
 <div class="assets">
     <h3>Library Catalog</h3>
     <div id="assetTable">
@@ -17,11 +16,11 @@
                 @foreach(var asset in Model.Asset)
                 {
                     <tr class="assetRow">
-                        <td class="">
-                            <a asp-controller="Catalog" asp-action="Detail" asp-route.id="@asset.Id">
-                                <img src="@asset.ImageUrl" class="imageCell" />
-                            </a>
-                        </td>
+                        <td class="img-responsive" style="width:10%;">
+                              <a asp-controller="Catalog" asp-action="Detail" asp-route-id="@asset.Id">
+                                    <img src="@asset.ImageUrl" class="imageCell" />
+                                </a>
+</td>
                         <td>@asset.Title</td>
                         <td>@asset.AuthorOrDirector</td>
                         <td>@asset.DeweyCallNumber</td>

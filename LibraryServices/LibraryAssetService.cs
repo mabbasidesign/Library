@@ -75,8 +75,8 @@ namespace LibraryServices
 
         public string GetTitle(int id)
         {
-            return _context.LibraryAssets
-                .FirstOrDefault(a => a.Id == id)
+            return _context.Books
+                .SingleOrDefault(a => a.Id == id)
                 .Title;
         }
 

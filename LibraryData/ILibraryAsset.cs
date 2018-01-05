@@ -9,14 +9,12 @@ namespace LibraryData
     {
         IEnumerable<LibraryAsset> GetAll();
         LibraryAsset GetById(int id);
-
         void Add(LibraryAsset newAsset);
         string AuthorOrDirector(int id);
         string GetDeweyIndex(int id);
         string GetType(int id);
         string GetTitle(int id);
         string GetIsbn(int id);
-
         LibraryBranch GetCurrentLocations(int id);
     }
 }
