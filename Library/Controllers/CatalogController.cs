@@ -17,7 +17,6 @@ namespace Library.Controllers
         public CatalogController(ILibraryAsset asset, ICheckout checkouts)
         {
             _asset = asset;
-
             _checkouts = checkouts;
         }
 
