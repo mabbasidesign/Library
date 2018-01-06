@@ -37,6 +37,7 @@ namespace Library
             services.AddMvc();
             services.AddSingleton(Configuration);
             services.AddScoped<ILibraryAsset, LibraryAssetService>();
+            services.AddScoped<ICheckout, ChekoutService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

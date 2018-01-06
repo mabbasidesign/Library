@@ -23,7 +23,6 @@ namespace Library.Models.Catalog
         public Checkout LatestCheckout { get; set; }
         public IEnumerable<CheckoutHistory> CheckoutHistory { get; set; }
         public IEnumerable<AssetHoldModel> CurrentHold { get; set; }
-
     }
 
     public class AssetHoldModel
