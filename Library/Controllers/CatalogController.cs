@@ -13,6 +13,7 @@ namespace Library.Controllers
     public class CatalogController : Controller
     {
         private readonly ILibraryAsset _asset;
+
         private readonly ICheckout _checkouts;
         public CatalogController(ILibraryAsset asset, ICheckout checkouts)
         {
