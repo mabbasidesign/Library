@@ -14,7 +14,7 @@ namespace LibraryData
         IEnumerable<CheckoutHistory> GetCheckoutHistory(int id);
         void PlaceHold(int assetId, int libraryCardId);
         void CheckoutItem(int assetId, int libraryCardId);
-        void CheckInItem(int assetId, int LibraryCardId);
+        void CheckInItem(int assetId    /*int LibraryCardId */    );
         Checkout GetLatestCheckout(int id);
         int GetNumberOfCopies(int id);
         int GetAvailableCopies(int id);

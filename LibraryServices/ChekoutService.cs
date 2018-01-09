@@ -37,6 +37,7 @@ namespace LibraryServices
         {
             return _context.Holds
                 .Include(h => h.LibraryAsset)
+                .ToList()
                 .Where(h => h.LibraryAsset.Id == id);
         }
 
@@ -45,10 +46,11 @@ namespace LibraryServices
             return _context.CheckoutHistories
                 .Include(h => h.LibraryAsset)
                 .Include(h => h.LibraryCard)
+                .ToList()
                 .Where(h => h.LibraryAsset.Id == id);
         }
 
-        public void CheckInItem(int assetId, int LibraryCardId)
+        public void CheckInItem(int assetId)
         {
             var now = DateTime.Now;
             var item = _context.LibraryAssets.FirstOrDefault(a => a.Id == assetId);
@@ -61,11 +63,13 @@ namespace LibraryServices
             var currentHolds = _context.Holds
                 .Include(h => h.LibraryAsset)
                 .Include(h => h.LibraryCard)
+                .ToList()
                 .Where(h => h.LibraryAsset.Id == assetId);
             // if there are hold, checkout the item to the libraryCard with the earliest hold
             if (currentHolds.Any())
             {
                 CheckouToEarliestHold(assetId, currentHolds);
+                return;
             }
             // otherwise update the items status to Available
             UpdateAssetStatus(assetId, "Available");
@@ -73,7 +77,7 @@ namespace LibraryServices
             _context.SaveChanges();
         }
 
-        private void CheckouToEarliestHold(int assetId, IQueryable<Hold> currentHolds)
+        private void CheckouToEarliestHold(int assetId, IEnumerable<Hold> currentHolds)
         {
             var earliestHold = currentHolds
                 .OrderBy(hold => hold.HoldPlaced)
@@ -82,7 +86,7 @@ namespace LibraryServices
 
             _context.Remove(earliestHold);
             _context.SaveChanges();
-            CheckInItem(assetId, card.Id);
+            CheckInItem(/*assetId*/   card.Id);
         }
 
         public void CheckoutItem(int assetId, int libraryCardId)
@@ -97,6 +101,7 @@ namespace LibraryServices
             UpdateAssetStatus(assetId, "Checked Out");
             var libraryCard = _context.LibraryCards
                 .Include(c => c.Checkouts)
+                .ToList()
                 .FirstOrDefault(c => c.Id == libraryCardId);
 
             var now = DateTime.Now;
@@ -157,7 +162,7 @@ namespace LibraryServices
             _context.SaveChanges();
         }
 
-        private void UpdateAssetStatus(int id, string v)
+        private void UpdateAssetStatus(int id, string newStatus)
         {
             var item = _context.LibraryAssets
                 .FirstOrDefault(a => a.Id == id);
@@ -165,7 +170,7 @@ namespace LibraryServices
             _context.Update(item);
 
             item.Status = _context.Statuses
-                .FirstOrDefault(s => s.Name == "Availabale");
+                .FirstOrDefault(s => s.Name == newStatus);
         }
 
         private void ClosingExistingCheckoutHistory(int id, DateTime now)
@@ -199,6 +204,7 @@ namespace LibraryServices
 
             var asset = _context.LibraryAssets
                 .Include(a => a.Status)
+                .ToList()
                 .FirstOrDefault(a => a.Id == assetId);
 
             var card = _context.LibraryCards
@@ -227,10 +233,11 @@ namespace LibraryServices
             var hold = _context.Holds
                 .Include(a => a.LibraryAsset)
                 .Include(a => a.LibraryCard)
+                .ToList()
                 .Where(v => v.Id == holdId);
 
             var cardId = hold
-                .Include(a => a.LibraryCard)
+                //.Include(a => a.LibraryCard)
                 .Select(a => a.LibraryCard.Id)
                 .FirstOrDefault();
 
@@ -246,6 +253,7 @@ namespace LibraryServices
             return _context.Holds
                 .Include(a => a.LibraryAsset)
                 .Include(a => a.LibraryCard)
+                .ToList()
                 .FirstOrDefault(v => v.Id == holdId)
                 .HoldPlaced;
         }
@@ -270,6 +278,7 @@ namespace LibraryServices
             return _context.Checkouts
                 .Include(a => a.LibraryAsset)
                 .Include(a => a.LibraryCard)
+                .ToList()
                 .FirstOrDefault(a => a.LibraryAsset.Id == assetId);
         }
 
