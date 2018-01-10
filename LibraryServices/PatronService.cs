@@ -13,7 +13,7 @@ namespace LibraryServices
         private readonly LibraryContext _context;
         public PatronService(LibraryContext context)
         {
-            context = _context;
+            _context = context;
         }
 
         public void Add(Patron newPatron)
