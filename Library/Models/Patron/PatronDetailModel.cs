@@ -23,6 +23,7 @@ namespace Library.Models.Patron
         public int LibraryCardId { get; set; }
         public string Address { get; set; }
         public DateTime MemberSince { get; set; }
+        public string Telephone { get; set; }
         public string HomeBranchLibrary { get; set; }
         public decimal OverdueFees { get; set; }
         public IEnumerable<Checkout> AssetsCheckedOut { get; set; }

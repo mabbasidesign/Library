@@ -1,5 +1,6 @@
 ﻿using Library.Models.Patron;
 using LibraryData;
+using LibraryData.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -40,14 +41,27 @@ namespace Library.Controllers
             return View(model);
         }
 
-        //public IActionResult Detail(int id)
-        //{
-        //    var patron = _patron.Get(id);
+        public IActionResult Detail(int id)
+        {
+            var patron = _patron.Get(id);
 
-        //    var
+            var model = new PatronDetailModel
+            {
+                FirstName = patron.FirstName,
+                LastName = patron.LastName,
+                Telephone = patron.Telephone,
+                Address = patron.Address,
+                MemberSince = patron.LibraryCard.Created,
+                OverdueFees = patron.LibraryCard.Fees,
+                LibraryCardId = patron.LibraryCard.Id,
+                AssetsCheckedOut = _patron.GetCheckouts(id).ToList() ?? new List<Checkout>(),
+                CheckoutHistory = _patron.GetCheckoutHistory(id),
+                Holds = _patron.GetHolds(id),
+                HomeBranchLibrary = patron.HomeLibraryBranch.Name,
+            };
 
-        //    return View();
-        //}
+            return View(model);
+        }
 
     }
 }
